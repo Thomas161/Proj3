@@ -18,5 +18,7 @@
     "url": "https://github.com/Thomas161/Proj3/issues"
   },
   "homepage": "https://github.com/Thomas161/Proj3#readme",
-  "dependencies": {}
+  "dependencies": {
+    "cross-fetch": "^3.0.6"
+  }
 }
