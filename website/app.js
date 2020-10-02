@@ -1,7 +1,7 @@
 /**Global Variables */
 // const config = require("./config.js");
 // const fetch = require("node-fetch");
-const URL = "http://api.openweathermap.org/data/2.5/weather?";
+const URL = "http://api.openweathermap.org/data/2.5/weather?APPID=";
 const API_KEY = "1a425e11bb04696c4f6f6ab481b9e74d";
 const triggerButton = document.querySelector("#generate");
 // console.log("Fetch API", config); //empty object
@@ -14,13 +14,19 @@ const triggerButton = document.querySelector("#generate");
 
 /**Sample function that tests API key works */
 async function getWeather() {
-  fetch(`${URL}id=524901&appid=${API_KEY}`)
+  const zipInput = document.getElementById("zip");
+  const z = zipInput.value;
+  fetch(`${URL}${API_KEY}&q=${z}`)
     .then((res) => res.json())
-    .then((data) => console.log("Name of city =>", data.name))
+    .then((data) => {
+      console.log("Name of city =>", data.name);
+      let con = document.getElementById("content");
+      con.innerHTML = data.name;
+    })
     .catch((err) => console.log(err));
 }
 getWeather();
-
+triggerButton.addEventListener("click", getWeather);
 /**Add click event and event listener to button  */
 
 let clickResponse = () => {
@@ -29,4 +35,3 @@ let clickResponse = () => {
   console.log(zipInput.value);
 };
 clickResponse();
-triggerButton.addEventListener("click", clickResponse);
