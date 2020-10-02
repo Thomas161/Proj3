@@ -53,29 +53,15 @@ label {
 }
 
 #entryHolder {
-  /* visibility: hidden; */
-
-  /* display: grid; */
-  width: 100%;
-  /* grid-template-columns: auto;
-  column-gap: 10px; */
+  visibility: hidden;
+  display: grid;
+  grid-template-columns: 250px 250px 250px;
+  column-gap: 10px;
   background: red;
   border: 5px solid black;
   /* row-gap: 10px; */
 }
 
-#entryHolder > #date {
-  position: relative;
-  width: 33%;
-  background: green;
-}
-#entryHolder > #temp {
-  position: relative;
-  width: 33%;
-  background: yellow;
-}
-#entryHolder > #content {
-  position: relative;
-  width: 33%;
-  background: brown;
+#entryHolder > div {
+  text-align: center;
 }
