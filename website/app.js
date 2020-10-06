@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let temp = document.getElementById("temp");
   let content = document.getElementById("content");
   let entries = document.getElementById("entryHolder");
+  let icon = document.getElementById("icon");
+  let celcius, date, tempIcon;
   // console.log("Fetch API", config); //empty object
   // console.log("Fetch API", API_KEY);
   // console.log("Fetch URL", URL);
@@ -17,30 +19,64 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   /**Helper functions */
 
-  /**Sample function that tests API key works */
   async function getWeather() {
     const zipInput = document.getElementById("zip");
     const z = zipInput.value;
     fetch(`${URL}${API_KEY}&q=${z}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log("Name of city =>", data.name);
-        let date = new Date();
-        dateId.innerHTML = date.getUTCDate();
-        console.log((temp.innerHTML = data.main.temp - 273));
-        content.innerHTML = data.name;
-        entries.style.visibility = "visible";
+        console.log("Data Returned =>", data);
+
+        postData("http://localhost:8080/sent", {
+          date,
+          temp: data.main.temp,
+          temp_max: data.main.temp_max,
+          temp_min: data.main.temp_min,
+          feel: feelings,
+          name: data.name,
+        });
       })
       .catch((err) => console.log(err));
   }
   getWeather();
+
+  //async post data to server
+  async function postData(url = "", data = {}) {
+    const res = await fetch(url, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    try {
+      const newDataIncoming = await res.json();
+      console.log("New Data recieved from API", newDataIncoming);
+      return newDataIncoming;
+    } catch (err) {
+      console.log("Errors found", err);
+    }
+  }
+
+  //update client/html
+
+  const updateHTML = async () => {
+    const res = await fetch("http://localhost:8080/retrieve");
+    try {
+      const retrievedData = await res.json();
+      date = new Date();
+      dateId.innerHTML = date.getUTCDate();
+      celcius = temp.innerHTML = Math.round(data.main.temp - 273) + "&#176;";
+      console.log("Degrees Celcius", celcius);
+      content.innerHTML = data.name;
+      tempIcon = data["weather"][0]["icon"];
+      console.log(tempIcon); //01n
+      icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
+      entries.style.visibility = "visible";
+    } catch (err) {
+      console.log("Errors found", err);
+    }
+  };
   triggerButton.addEventListener("click", getWeather);
-
-  /**Add click event and event listener to button  */
-  //   let clickResponse = () => {
-  //     const zipInput = document.getElementById("zip");
-
-  //     console.log(zipInput.value);
-  //   };
-  //   clickResponse();
 });
