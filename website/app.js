@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let content = document.getElementById("content");
   let entries = document.getElementById("entryHolder");
   let icon = document.getElementById("icon");
+  let feelings = document.getElementById("feelings");
   let celcius, date, tempIcon;
   // console.log("Fetch API", config); //empty object
   // console.log("Fetch API", API_KEY);
@@ -18,6 +19,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
   /** */
 
   /**Helper functions */
+
+  triggerButton.addEventListener("click", getWeather);
 
   async function getWeather() {
     const zipInput = document.getElementById("zip");
@@ -36,6 +39,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
           name: data.name,
         });
       })
+      .then(updateHTML)
       .catch((err) => console.log(err));
   }
   getWeather();
@@ -66,17 +70,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
     try {
       const retrievedData = await res.json();
       date = new Date();
-      dateId.innerHTML = date.getUTCDate();
-      celcius = temp.innerHTML = Math.round(data.main.temp - 273) + "&#176;";
+      dateId.innerHTML = retrievedData.getUTCDate();
+      celcius = temp.innerHTML =
+        Math.round(retrievedData.main.temp - 273) + "&#176;";
       console.log("Degrees Celcius", celcius);
-      content.innerHTML = data.name;
-      tempIcon = data["weather"][0]["icon"];
+      content.innerHTML = retrievedData.name;
+      tempIcon = retrievedData["weather"][0]["icon"];
       console.log(tempIcon); //01n
       icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
       entries.style.visibility = "visible";
+      console.log("Retrieved data", retrievedData);
     } catch (err) {
       console.log("Errors found", err);
     }
   };
-  triggerButton.addEventListener("click", getWeather);
 });
