@@ -19,7 +19,10 @@
   },
   "homepage": "https://github.com/Thomas161/Proj3#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "cross-fetch": "^3.0.6",
+    "express": "^4.17.1",
     "node-fetch": "^2.6.1"
   }
 }
