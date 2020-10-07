@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let entries = document.getElementById("entryHolder");
   let icon = document.getElementById("icon");
   let feelings = document.getElementById("feelings");
+
   let tempIcon;
   let dateSubmitted = {};
 
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       .then(updateHTML);
     setTimeout(() => {
       console.log("Updated UI");
+      document.querySelector(".card").style.display = "none";
     }, 2000);
   }
 
