@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", (event) => {
   console.log("DOM loaded and parsed", event.timeStamp);
-  /**Global Variables */
 
+  /**Global Variables */
   const URL = "http://api.openweathermap.org/data/2.5/weather?APPID=";
   const API_KEY = "1a425e11bb04696c4f6f6ab481b9e74d";
   const triggerButton = document.querySelector("#generate");
@@ -11,25 +11,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let entries = document.getElementById("entryHolder");
   let icon = document.getElementById("icon");
   let feelings = document.getElementById("feelings");
-  let celcius, tempIcon;
+  let tempIcon;
   let dateSubmitted = {};
-
-  /** */
 
   /**Helper functions */
 
   triggerButton.addEventListener("click", getWeather);
 
   async function getWeather() {
-    const zipInput = document.getElementById("zip");
-    const z = zipInput.value;
-    fetch(`${URL}${API_KEY}&q=${z}`)
-      .then((res) => res.json())
+    const zipInput = document.getElementById("zip").value;
+
+    getDataFromUrl(URL, API_KEY, zipInput)
       .then((data) => {
         console.log("Data Returned =>", data);
 
         postData("http://localhost:8080/sent", {
-          date,
+          dateSubmitted,
           temp: data.main.temp,
           temp_max: data.main.temp_max,
           temp_min: data.main.temp_min,
@@ -37,13 +34,25 @@ document.addEventListener("DOMContentLoaded", (event) => {
           name: data.name,
         });
       })
-      .then(updateHTML)
-      .catch((err) => console.log(err));
+      .then(updateHTML);
+    setTimeout(() => {
+      console.log("Updated UI");
+    }, 2000);
   }
-  // getWeather();
+
+  const getDataFromUrl = async (url, apiKey, zip) => {
+    const res = await fetch(`${url}${apiKey}&q=${zip}`);
+    try {
+      const dataRetrieved = await res.json();
+      console.log("Data retrieved", dataRetrieved);
+      return dataRetrieved;
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
 
   //async post data to server
-  async function postData(url = "", data = {}) {
+  const postData = async (url = "", data = {}) => {
     const res = await fetch(url, {
       method: "POST",
       credentials: "same-origin",
@@ -59,14 +68,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     } catch (err) {
       console.log("Errors found", err);
     }
-  }
+  };
 
   //update client/html
 
   const updateHTML = async () => {
     const res = await fetch("http://localhost:8080/retrieve");
+    console.log("response", res);
     try {
       const retrievedData = await res.json();
+      console.log("Comes back =>", retrievedData); //temp
       dateSubmitted = {
         day: new Date().getDay(),
         month: new Date().getMonth(),
@@ -75,12 +86,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
       };
       const { day, month, year, time } = dateSubmitted;
       dateEntry.innerHTML = `${day}/${month}/${year}/${time}`;
-      celcius = temp.innerHTML =
-        Math.round(retrievedData.main.temp - 273) + "&#176;";
+      let celcius = Math.round(retrievedData - 273) + "&#176;";
+      temp.innerHTML = celcius;
       console.log("Degrees Celcius", celcius);
       content.innerHTML = retrievedData.name;
       tempIcon = retrievedData["weather"][0]["icon"];
-      console.log(tempIcon); //01n
+      // console.log(tempIcon); //01n
       icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
       entries.style.visibility = "visible";
       console.log("Retrieved data", retrievedData);
