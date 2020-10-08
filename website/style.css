@@ -4,7 +4,9 @@ html {
   margin: 0;
   background-image: url("./mustang.jpg");
   background-position: center;
-  background-size: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
 }
 
 .headline {
@@ -14,21 +16,37 @@ html {
   text-align: center;
   -webkit-text-stroke: 3px;
 }
+
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.2s;
   max-width: 242px;
-  height: 460px;
+  height: 210px;
   position: relative;
   background-color: blueviolet;
   top: 110px;
-
   margin: 20px;
+  transition: 0.4s ease-in-out;
 }
+
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  height: 460px;
+}
+.incoming {
+  text-align: center;
+  position: relative;
+  top: -33px;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.4s ease-in-out;
 }
 
+.card:hover .incoming {
+  visibility: visible;
+  opacity: 1;
+  margin-top: -18px;
+}
 .imgBox #beach {
   position: relative;
   width: 200px;
@@ -47,15 +65,10 @@ html {
   font-family: "Carter One", cursive;
   color: rgb(43, 41, 41);
 }
-#zip {
-  /* margin: 40px; */
-  height: 25px;
-  /* width: 120px; */
-  border-radius: 15px;
-}
-
-#feelings {
-  border-radius: 15px;
+#zip,
+#feelings,
+#generate {
+  margin: 4px;
 }
 
 #generate {
