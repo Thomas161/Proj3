@@ -17,10 +17,11 @@ html {
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.2s;
-  width: 450px;
-  height: 260px;
+  max-width: 242px;
+  height: 460px;
   position: relative;
   background-color: blueviolet;
+  top: 110px;
 
   margin: 20px;
 }
@@ -28,14 +29,20 @@ html {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
+.imgBox #beach {
+  position: relative;
+  width: 200px;
+  height: 250px;
+  top: -60px;
+  left: 20px;
+  border-radius: 7px;
+}
+
 .zip,
 .feel,
 .title {
   position: relative;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
+  text-align: center;
   padding: 5px;
   font-family: "Carter One", cursive;
   color: rgb(43, 41, 41);

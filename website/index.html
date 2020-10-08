@@ -21,7 +21,11 @@
   <body>
     <div id="app">
       <div class="holder headline">Weather Journal App</div>
-      <div class="card w3-grayscale">
+
+      <div class="card">
+        <div class="imgBox">
+          <img src="./beach_2.jpg" id="beach" alt="beach_none" />
+        </div>
         <div class="holder zip">
           <input type="text" id="zip" placeholder="enter zip code here" />
         </div>
@@ -31,7 +35,7 @@
             id="feelings"
             placeholder="Enter your feelings here"
             rows="7"
-            cols="50"
+            cols="20"
           ></textarea>
 
           <button id="generate" type="submit">Generate</button>
