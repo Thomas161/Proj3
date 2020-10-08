@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let dateEntry = document.getElementById("date");
   let temp = document.getElementById("temp");
   let name = document.getElementById("namePlace");
-  // let entries = document.getElementById("entryHolder");
+  let conditions = document.getElementById("conditions");
+  let lat = document.getElementById("lat");
+  let long = document.getElementById("long");
   let icon = document.getElementById("icon");
   let dateSubmitted = new Date();
 
@@ -21,15 +23,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const feelingsInput = document.querySelector("#feelings").value;
     getDataFromUrl(URL, API_KEY, zipInput)
       .then((data) => {
-        console.log("Data Returned =>", data);
+        console.log("Data Returned =>", data.weather[0].main);
         postData("http://localhost:8080/sent", {
           date: dateSubmitted,
           temp: data.main.temp,
+          conditions: data.weather[0].main,
           feel: feelingsInput,
           name: data.name,
           icon: data.weather[0].icon,
           lat: data.coord.lat,
-          lat: data.coord.lon,
+          lon: data.coord.lon,
         });
       })
       .then(updateHTML);
@@ -75,8 +78,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
       const retrievedData = await res.json();
       console.log("Comes back =>", retrievedData); //temp
       dateEntry.innerHTML = retrievedData.date;
-      // name.innerHTML = retrievedData.name;
+      name.innerHTML = retrievedData.name;
       temp.innerHTML = Math.round(retrievedData.temp - 273);
+      conditions.innerHTML = retrievedData.conditions;
+      lat.innerHTML = retrievedData.lat;
+      long.innerHTML = retrievedData.lon;
       let tempIcon = retrievedData.icon;
       icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
     } catch (err) {

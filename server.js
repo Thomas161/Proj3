@@ -26,13 +26,17 @@ app.get("/retrieve", (req, res) => {
   res.send(projectData);
 });
 app.post("/sent", (req, res) => {
-  let data = req.body;
-  projectData["temp"] = data.temp;
-  projectData["icon"] = data.icon;
-  projectData["name"] = data.name;
-  projectData["feel"] = data.feel;
-  projectData["longitude"] = data.coords.lon;
-  projectData["latitude"] = data.coords.lat;
+  // let data = req.body;
+  projectData = {
+    temp: req.body.temp,
+    icon: req.body.icon,
+    name: req.body.namePlace,
+    feel: req.body.feelings,
+    long: req.body.long,
+    lat: req.body.lat,
+    conditions: req.body.conditions,
+    date: req.body.date,
+  };
 
   res.send("Post sent", projectData);
 });
