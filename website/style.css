@@ -84,13 +84,26 @@ html {
 #entryHolder {
   visibility: hidden;
   display: grid;
-  grid-template-columns: 250px 250px 250px;
-  column-gap: 10px;
+  grid-template-columns: auto auto auto auto;
+  grid-column-gap: 10px;
   background: red;
   border: 5px solid black;
+  background: olive;
   /* row-gap: 10px; */
+}
+
+.grid-item {
+  background-color: (255, 255, 255, 0.75);
+  border: 4px solid black;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
 }
 
 #entryHolder > div {
   text-align: center;
+}
+#namePlace {
+  font-size: 40px;
+  color: #fff;
 }

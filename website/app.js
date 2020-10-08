@@ -7,10 +7,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const triggerButton = document.querySelector("#generate");
   let dateEntry = document.getElementById("date");
   let temp = document.getElementById("temp");
-  let content = document.getElementById("content");
-  let entries = document.getElementById("entryHolder");
+  let name = document.getElementById("namePlace");
+  // let entries = document.getElementById("entryHolder");
   let icon = document.getElementById("icon");
-  let tempIcon;
   let dateSubmitted = new Date();
 
   /**Helper functions */
@@ -37,6 +36,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     setTimeout(() => {
       console.log("Updated UI");
       document.querySelector(".card").style.display = "none";
+      document.querySelector("#entryHolder").style.visibility = "visible";
     }, 2000);
   }
 
@@ -74,15 +74,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     try {
       const retrievedData = await res.json();
       console.log("Comes back =>", retrievedData); //temp
-
-      let celcius = Math.round(retrievedData - 273) + "&#176;";
-      temp.innerHTML = celcius;
-      console.log("Degrees Celcius", celcius.toString());
-      content.innerHTML = retrievedData;
-      tempIcon = retrievedData["weather"][0]["icon"];
+      dateEntry.innerHTML = retrievedData.date;
+      // name.innerHTML = retrievedData.name;
+      temp.innerHTML = Math.round(retrievedData.temp - 273);
+      let tempIcon = retrievedData.icon;
       icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
-      // entries.style.visibility = "visible";
-      // console.log("Retrieved data", retrievedData);
     } catch (err) {
       console.log("Errors found", err);
     }
