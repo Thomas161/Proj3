@@ -30,7 +30,7 @@ app.post("/sent", (req, res) => {
   projectData["temp"] = data.temp;
   projectData["icon"] = data.icon;
   projectData["name"] = data.name;
-  projectData["feel"] = data.feelings;
+  projectData["feel"] = data.feel;
   projectData["longitude"] = data.coords.lon;
   projectData["latitude"] = data.coords.lat;
 

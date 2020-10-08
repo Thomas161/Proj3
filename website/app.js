@@ -10,15 +10,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let content = document.getElementById("content");
   let entries = document.getElementById("entryHolder");
   let icon = document.getElementById("icon");
-  let feelings = document.getElementById("feelings");
   let tempIcon;
-  let dateSubmitted = {
-    day: new Date().getDay(),
-    month: new Date().getMonth(),
-    year: new Date().getYear(),
-    time: new Date().getTime(),
-  };
-  const { day, month, year, time } = dateSubmitted;
+  let dateSubmitted = new Date();
 
   /**Helper functions */
 
@@ -26,18 +19,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   async function getWeather() {
     const zipInput = document.getElementById("zip").value;
-
+    const feelingsInput = document.querySelector("#feelings").value;
     getDataFromUrl(URL, API_KEY, zipInput)
       .then((data) => {
         console.log("Data Returned =>", data);
         postData("http://localhost:8080/sent", {
-          date: `${day}/${month}/${year}/${time}`,
+          date: dateSubmitted,
           temp: data.main.temp,
-          feel: feelings,
+          feel: feelingsInput,
           name: data.name,
-          icon: data["weather"][0]["icon"],
-          lat: data.coords.lat,
-          lat: data.coords.lon,
+          icon: data.weather[0].icon,
+          lat: data.coord.lat,
+          lat: data.coord.lon,
         });
       })
       .then(updateHTML);
@@ -50,9 +43,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const getDataFromUrl = async (url, apiKey, zip) => {
     const res = await fetch(`${url}${apiKey}&q=${zip}`);
     try {
-      const dataRetrieved = await res.json();
-      console.log("Data retrieved", dataRetrieved);
-      return dataRetrieved;
+      const data = await res.json();
+      console.log("Data retrieved", data);
+      return data;
     } catch (err) {
       console.log("Error", err);
     }
@@ -60,21 +53,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   //async post data to server
   const postData = async (url = "", data = {}) => {
-    const res = await fetch(url, {
+    fetch(url, {
       method: "POST",
       credentials: "same-origin",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+    }).then((res) => {
+      console.log("response sent from post", res);
+      return res.json();
     });
-    try {
-      const newDataIncoming = await res.json();
-      // console.log("New Data recieved from API", newDataIncoming);
-      return newDataIncoming;
-    } catch (err) {
-      console.log("Errors found", err);
-    }
   };
 
   //update client/html
@@ -86,15 +75,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
       const retrievedData = await res.json();
       console.log("Comes back =>", retrievedData); //temp
 
-      let celcius = Math.round(retrievedData - 273) + "&#176";
+      let celcius = Math.round(retrievedData - 273) + "&#176;";
       temp.innerHTML = celcius;
-      console.log("Degrees Celcius", celcius);
-      content.innerHTML = retrievedData.name;
+      console.log("Degrees Celcius", celcius.toString());
+      content.innerHTML = retrievedData;
       tempIcon = retrievedData["weather"][0]["icon"];
-      // console.log(tempIcon); //01n
       icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
-      entries.style.visibility = "visible";
-      console.log("Retrieved data", retrievedData);
+      // entries.style.visibility = "visible";
+      // console.log("Retrieved data", retrievedData);
     } catch (err) {
       console.log("Errors found", err);
     }
