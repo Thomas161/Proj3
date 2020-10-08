@@ -11,9 +11,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let entries = document.getElementById("entryHolder");
   let icon = document.getElementById("icon");
   let feelings = document.getElementById("feelings");
-
   let tempIcon;
-  let dateSubmitted = {};
+  let dateSubmitted = {
+    day: new Date().getDay(),
+    month: new Date().getMonth(),
+    year: new Date().getYear(),
+    time: new Date().getTime(),
+  };
+  const { day, month, year, time } = dateSubmitted;
 
   /**Helper functions */
 
@@ -25,14 +30,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
     getDataFromUrl(URL, API_KEY, zipInput)
       .then((data) => {
         console.log("Data Returned =>", data);
-
         postData("http://localhost:8080/sent", {
-          dateSubmitted,
+          date: `${day}/${month}/${year}/${time}`,
           temp: data.main.temp,
-          temp_max: data.main.temp_max,
-          temp_min: data.main.temp_min,
           feel: feelings,
           name: data.name,
+          icon: data["weather"][0]["icon"],
+          lat: data.coords.lat,
+          lat: data.coords.lon,
         });
       })
       .then(updateHTML);
@@ -65,7 +70,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     });
     try {
       const newDataIncoming = await res.json();
-      console.log("New Data recieved from API", newDataIncoming);
+      // console.log("New Data recieved from API", newDataIncoming);
       return newDataIncoming;
     } catch (err) {
       console.log("Errors found", err);
@@ -76,19 +81,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   const updateHTML = async () => {
     const res = await fetch("http://localhost:8080/retrieve");
-    console.log("response", res);
+    console.log("response", res.status); //200 status
     try {
       const retrievedData = await res.json();
       console.log("Comes back =>", retrievedData); //temp
-      dateSubmitted = {
-        day: new Date().getDay(),
-        month: new Date().getMonth(),
-        year: new Date().getYear(),
-        time: new Date().getTime(),
-      };
-      const { day, month, year, time } = dateSubmitted;
-      dateEntry.innerHTML = `${day}/${month}/${year}/${time}`;
-      let celcius = Math.round(retrievedData - 273) + "&#176;";
+
+      let celcius = Math.round(retrievedData - 273) + "&#176";
       temp.innerHTML = celcius;
       console.log("Degrees Celcius", celcius);
       content.innerHTML = retrievedData.name;
