@@ -12,47 +12,55 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let lat = document.getElementById("lat");
   let long = document.getElementById("long");
   let icon = document.getElementById("icon");
+  const zipInput = document.getElementById("zip").value;
+  const feelingsInput = document.querySelector("#feelings").value;
   let dateSubmitted = new Date();
 
   /**Helper functions */
 
   triggerButton.addEventListener("click", getWeather);
 
-  async function getWeather() {
-    const zipInput = document.getElementById("zip").value;
-    const feelingsInput = document.querySelector("#feelings").value;
-    getDataFromUrl(URL, API_KEY, zipInput)
-      .then((data) => {
-        console.log("Data Returned =>", data.weather[0].main);
-        postData("http://localhost:8080/sent", {
-          date: dateSubmitted,
-          temp: data.main.temp,
-          conditions: data.weather[0].main,
-          feel: feelingsInput,
-          name: data.name,
-          icon: data.weather[0].icon,
-          lat: data.coord.lat,
-          lon: data.coord.lon,
-        });
-      })
-      .then(updateHTML);
-    setTimeout(() => {
-      console.log("Updated UI");
-      document.querySelector(".card").style.display = "none";
-      document.querySelector("#entryHolder").style.visibility = "visible";
-    }, 2000);
-  }
+  let urlAPIKeyZIP = `${URL}${API_KEY}&q=${zipInput}`;
 
-  const getDataFromUrl = async (url, apiKey, zip) => {
-    const res = await fetch(`${url}${apiKey}&q=${zip}`);
-    try {
-      const data = await res.json();
-      console.log("Data retrieved", data);
-      return data;
-    } catch (err) {
-      console.log("Error", err);
-    }
-  };
+  async function getWeather(url) {
+    let res = await fetch(url);
+    let weatherInformation = res.json();
+    return weatherInformation;
+  }
+  getWeather(urlAPIKeyZIP)
+    .then((data) => {
+      if (data.cod === "200") {
+        const icon = data.weather[0].icon;
+        const date = dateSubmitted;
+        const name = data.name;
+        const feelings = feelingsInput;
+        const tempMain = Math.floor(data.main.temp - 273);
+        const longitude = data.coord.lon;
+        const latitude = data.coord.lat;
+        console.log("Data Returned =>", data);
+        postData("http://localhost:8080/sent", {
+          icon,
+          date,
+          name,
+          feelings,
+          tempMain,
+          longitude,
+          latitude,
+        });
+        updateHTML();
+      } else {
+        console.log("Bad data Entry, invalid");
+        return;
+      }
+    })
+
+    .then(
+      setTimeout(() => {
+        console.log("Updated UI");
+        document.querySelector(".card").style.display = "none";
+        document.querySelector("#entryHolder").style.visibility = "visible";
+      }, 2000)
+    );
 
   //async post data to server
   const postData = async (url = "", data = {}) => {
