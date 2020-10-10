@@ -22,45 +22,45 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   let urlAPIKeyZIP = `${URL}${API_KEY}&q=${zipInput}`;
 
+  getWeather(urlAPIKeyZIP).then((data) => {
+    if (data.cod === "200") {
+      const icon = data.weather[0].icon;
+      const date = dateSubmitted;
+      const name = data.name;
+      const feelings = feelingsInput;
+      const tempMain = Math.floor(data.main.temp - 273);
+      const longitude = data.coord.lon;
+      const latitude = data.coord.lat;
+      console.log("Data Returned =>", data);
+      postData("http://localhost:8080/sent", {
+        icon,
+        date,
+        name,
+        feelings,
+        tempMain,
+        longitude,
+        latitude,
+      });
+      updateHTML();
+    } else {
+      console.log("Bad data Entry, invalid");
+      return;
+    }
+  });
+
+  // .then(
+  //   setTimeout(() => {
+  //     console.log("Updated UI");
+  //     document.querySelector(".card").style.display = "none";
+  //     document.querySelector("#entryHolder").style.visibility = "visible";
+  //   }, 2000)
+  // );
+
   async function getWeather(url) {
     let res = await fetch(url);
     let weatherInformation = res.json();
     return weatherInformation;
   }
-  getWeather(urlAPIKeyZIP)
-    .then((data) => {
-      if (data.cod === "200") {
-        const icon = data.weather[0].icon;
-        const date = dateSubmitted;
-        const name = data.name;
-        const feelings = feelingsInput;
-        const tempMain = Math.floor(data.main.temp - 273);
-        const longitude = data.coord.lon;
-        const latitude = data.coord.lat;
-        console.log("Data Returned =>", data);
-        postData("http://localhost:8080/sent", {
-          icon,
-          date,
-          name,
-          feelings,
-          tempMain,
-          longitude,
-          latitude,
-        });
-        updateHTML();
-      } else {
-        console.log("Bad data Entry, invalid");
-        return;
-      }
-    })
-
-    .then(
-      setTimeout(() => {
-        console.log("Updated UI");
-        document.querySelector(".card").style.display = "none";
-        document.querySelector("#entryHolder").style.visibility = "visible";
-      }, 2000)
-    );
 
   //async post data to server
   const postData = async (url = "", data = {}) => {
