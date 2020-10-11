@@ -22,9 +22,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const zipInput = document.getElementById("zip").value;
     const res = await fetch(`${URL}${zipInput},us&appid=${API_KEY}`);
     console.log(res);
+
     try {
       const convertResponse = await res.json();
-      console.log("Response json =>", convertResponse);
+   
+      const icon = convertResponse.weather[0].icon;
+        const date = dateSubmitted;
+        const name = convertResponse.name;
+        const feelings = feelingsInput;
+        const tempMain = Math.floor(convertResponse.main.temp - 273);
+        const longitude = convertResponse.coord.lon;
+        const latitude = convertResponse.coord.lat;
+        console.log("Response json =>", convertResponse);
+          postData("/sent", {
+      icon,
+      date,
+      name,
+      feelings,
+      tempMain,
+      longitude,
+      latitude,
+    });
+    updateHTML();
       return convertResponse;
     } catch (err) {
       console.log("Error =>", err);
@@ -34,24 +53,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   triggerButton.addEventListener("click", getWeather);
 
   // try {
-  //   const icon = data.weather[0].icon;
-  //   const date = dateSubmitted;
-  //   const name = data.name;
-  //   const feelings = feelingsInput;
-  //   const tempMain = Math.floor(data.main.temp - 273);
-  //   const longitude = data.coord.lon;
-  //   const latitude = data.coord.lat;
+  //  
   //   console.log("Data Returned =>", data);
-  //   postData("/sent", {
-  //     icon,
-  //     date,
-  //     name,
-  //     feelings,
-  //     tempMain,
-  //     longitude,
-  //     latitude,
-  //   });
-  //   updateHTML();
+  
   // } catch (err) {
   //   console.log("Bad data Entry, invalid", err);
   //   return;
@@ -72,17 +76,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
   //   return weatherInformation;
   // }
 
-  //async post data to server
-  // const postData = async (url = "", data = {}) => {
-  //   await fetch(url, {
-  //     method: "POST",
-  //     credentials: "same-origin",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(data),
-  //   });
-  // };
+  async post data to server
+  const postData = async (url = "", data = {}) => {
+    await fetch(url, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  };
 
   //update client/html
 
