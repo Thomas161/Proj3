@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   console.log("DOM loaded and parsed", event.timeStamp);
 
   /**Global Variables */
-  const URL = "https://api.openweathermap.org/data/2.5/weather";
+  const URL = "http://api.openweathermap.org/data/2.5/weather?zip=";
   const API_KEY = "1a425e11bb04696c4f6f6ab481b9e74d";
   const triggerButton = document.querySelector("#generate");
   let dateEntry = document.getElementById("date");
@@ -12,23 +12,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let lat = document.getElementById("lat");
   let long = document.getElementById("long");
   let icon = document.getElementById("icon");
-  const zipInput = document.getElementById("zip").value;
+
   const feelingsInput = document.querySelector("#feelings").value;
   let dateSubmitted = new Date();
 
   /**Helper functions */
 
-  let urlAPIKeyZIP = `${URL}?q=${zipInput}&APPID=${API_KEY}`;
-  console.log(urlAPIKeyZIP);
+  const getWeather = async () => {
+    const zipInput = document.getElementById("zip").value;
+    const res = await fetch(`${URL}${zipInput},us&appid=${API_KEY}`);
+    console.log(res);
+    try {
+      const convertResponse = await res.json();
+      console.log("Response json =>", convertResponse);
+      return convertResponse;
+    } catch (err) {
+      console.log("Error =>", err);
+    }
+  };
 
   triggerButton.addEventListener("click", getWeather);
-
-  async function getWeather() {
-    let res = await fetch(urlAPIKeyZIP);
-    let convertResponse = await res.json();
-    console.log("Response json =>", convertResponse);
-    return convertResponse;
-  }
 
   // try {
   //   const icon = data.weather[0].icon;
