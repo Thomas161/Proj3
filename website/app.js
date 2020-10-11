@@ -12,73 +12,64 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let lat = document.getElementById("lat");
   let long = document.getElementById("long");
   let icon = document.getElementById("icon");
-
-  const feelingsInput = document.querySelector("#feelings").value;
   let dateSubmitted = new Date();
 
   /**Helper functions */
 
-  const getWeather = async () => {
-    const zipInput = document.getElementById("zip").value;
-    const res = await fetch(`${URL}${zipInput},us&appid=${API_KEY}`);
-    console.log(res);
+  triggerButton.addEventListener("click", getWeather);
 
-    try {
-      const convertResponse = await res.json();
-   
-      const icon = convertResponse.weather[0].icon;
-        const date = dateSubmitted;
-        const name = convertResponse.name;
-        const feelings = feelingsInput;
-        const tempMain = Math.floor(convertResponse.main.temp - 273);
-        const longitude = convertResponse.coord.lon;
-        const latitude = convertResponse.coord.lat;
-        console.log("Response json =>", convertResponse);
+  async function getWeather() {
+    const zipInput = document.getElementById("zip").value;
+    const feelingsInput = document.querySelector("#feelings").value;
+    // const res = await fetch(`${URL}${zipInput},us&appid=${API_KEY}`);
+    // console.log(res);
+
+    getFullURL(URL, zipInput, API_KEY)
+      .then((convertResponse) => {
+        if (String(convertResponse.cod) === "404") {
+          alert("Please enter valid zip code");
+        } else {
+          console.log(convertResponse);
+          const icon = convertResponse.weather[0].icon;
+          const date = dateSubmitted;
+          const name = convertResponse.name;
+          const feelings = feelingsInput;
+          const tempMain = Math.floor(convertResponse.main.temp - 273);
+          const longitude = convertResponse.coord.lon;
+          const latitude = convertResponse.coord.lat;
+          console.log("Response json =>", convertResponse);
           postData("/sent", {
-      icon,
-      date,
-      name,
-      feelings,
-      tempMain,
-      longitude,
-      latitude,
-    });
-    updateHTML();
-      return convertResponse;
+            icon,
+            date,
+            name,
+            feelings,
+            tempMain,
+            longitude,
+            latitude,
+          });
+        }
+      })
+      .then(updateHTML);
+    setTimeout(() => {
+      document.querySelector(".card").style.display = "none";
+      document.querySelector("#entryHolder").style.visibility = "visible";
+    }, 2500);
+  }
+
+  const getFullURL = async (url, zip, key) => {
+    let res = await fetch(`${url}${zip},us&appid=${key}`);
+    try {
+      const newIncomingData = await res.json();
+      console.log(newIncomingData);
+      return newIncomingData;
     } catch (err) {
-      console.log("Error =>", err);
+      console.log(err);
     }
   };
 
-  triggerButton.addEventListener("click", getWeather);
-
-  // try {
-  //  
-  //   console.log("Data Returned =>", data);
-  
-  // } catch (err) {
-  //   console.log("Bad data Entry, invalid", err);
-  //   return;
-  // }
-
-  // .then(
-  //   setTimeout(() => {
-  //     console.log("Updated UI");
-  //     document.querySelector(".card").style.display = "none";
-  //     document.querySelector("#entryHolder").style.visibility = "visible";
-  //   }, 2000)
-  // );
-
-  // async function getWeather(url) {
-  //   const res = await fetch(url);
-  //   console.log(res.status);//400
-  //   const weatherInformation = await res.json();
-  //   return weatherInformation;
-  // }
-
-  async post data to server
+  // async post data to server
   const postData = async (url = "", data = {}) => {
-    await fetch(url, {
+    let res = await fetch(url, {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -86,26 +77,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
       },
       body: JSON.stringify(data),
     });
+    try {
+      const newIncomingData = await res.json();
+      console.log("Incoming data =>", newIncomingData);
+      return newIncomingData;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //update client/html
 
-  // const updateHTML = async () => {
-  //   const res = await fetch("http://localhost:8080/retrieve");
-  //   console.log("response", res.status); //200 status
-  // try {
-  //   const retrievedData = await res.json();
-  //   console.log("Comes back =>", retrievedData); //temp
-  //   dateEntry.innerHTML = retrievedData.date;
-  //   name.innerHTML = retrievedData.name;
-  //   temp.innerHTML = Math.round(retrievedData.temp - 273);
-  //   conditions.innerHTML = retrievedData.conditions;
-  //   lat.innerHTML = retrievedData.latitude;
-  //   long.innerHTML = retrievedData.longitude;
-  //   let tempIcon = retrievedData.icon;
-  //   icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
-  // } catch (err) {
-  //   console.log("Errors found", err);
-  // }
-  // };
+  const updateHTML = async () => {
+    const res = await fetch("/retrieve");
+    console.log("response", res.status); //200 status
+    try {
+      const retrievedData = await res.json();
+      // console.log("Comes back =>", retrievedData); //temp
+      dateEntry.innerHTML = retrievedData.date;
+      name.innerHTML = retrievedData.name;
+      temp.innerHTML = Math.round(retrievedData.temp - 273);
+      conditions.innerHTML = retrievedData.conditions;
+      lat.innerHTML = retrievedData.latitude;
+      long.innerHTML = retrievedData.longitude;
+      let tempIcon = retrievedData.icon;
+      icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
+    } catch (err) {
+      console.log("Errors found", err);
+    }
+  };
 });

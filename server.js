@@ -38,5 +38,5 @@ app.post("/sent", (req, res) => {
     date: req.body.date,
   };
 
-  res.send("Post sent", projectData);
+  res.status(200).send(JSON.parse(JSON.stringify(projectData)));
 });
