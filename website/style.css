@@ -84,27 +84,29 @@ html {
 #entryHolder {
   visibility: hidden;
   display: grid;
-  grid-template-columns: 115px 115px 115px 115px;
+  grid-template-columns: 140px 140px 140px 140px;
   grid-column-gap: 10px;
   background: red;
 
   /* row-gap: 10px; */
 }
 .entry {
-  position: relative;
-  top: 100px;
-  width: 481px;
-  margin: 40px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 300px;
 }
 
 .grid-item {
   border: 4px solid black;
   margin: 10px;
   text-align: center;
+  position: relative;
 }
 
 #entryHolder > div {
-  position: relative;
   font-size: 15px;
   color: #fff;
 }
@@ -113,6 +115,7 @@ html {
   border: none;
   text-decoration: underline;
   background: cadetblue;
+  height: 25px;
 }
 #arrow:hover {
   transform: scale(1.09);

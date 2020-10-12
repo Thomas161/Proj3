@@ -112,4 +112,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
       console.log("Errors found", err);
     }
   };
+
+  document.getElementById("arrow").addEventListener("click", function (evt) {
+    console.log("Event fired", evt.target);
+    document.querySelector("#entryHolder").style.visibility = "hidden";
+    document.querySelector(".card").style.display = "block";
+  });
 });
