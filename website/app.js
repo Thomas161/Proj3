@@ -102,10 +102,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
       console.log("Comes back =>", retrievedData);
       dateEntry.innerHTML = retrievedData.date;
       name.innerHTML = retrievedData.name;
-      temp.innerHTML = Math.round(retrievedData.temp - 273) + "&deg;";
+      temp.innerHTML = Math.round(retrievedData.temp - 273) + "&deg;C";
       conditions.innerHTML = retrievedData.conditions;
-      lat.innerHTML = retrievedData.lat;
-      long.innerHTML = retrievedData.long;
+      lat.innerHTML = "Latitude:" + retrievedData.lat;
+      long.innerHTML = "Longitude:" + retrievedData.long;
       let tempIcon = retrievedData.icon;
       icon.innerHTML = `<img src="http://openweathermap.org/img/w/${tempIcon}.png"; alt="image_weather"/>`;
     } catch (err) {
