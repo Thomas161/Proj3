@@ -23,17 +23,18 @@ const server = app.listen(PORT, () => {
 console.log(server);
 
 app.get("/retrieve", (req, res) => {
-  res.send(projectData);
+  res.status(200).send(JSON.parse(JSON.stringify(projectData)));
 });
 app.post("/sent", (req, res) => {
   // let data = req.body;
+  console.log("Request", req);
   projectData = {
-    temp: req.body.temp,
+    temp: req.body.tempMain,
     icon: req.body.icon,
-    name: req.body.namePlace,
+    name: req.body.name,
     feel: req.body.feelings,
-    long: req.body.long,
-    lat: req.body.lat,
+    long: req.body.longitude,
+    lat: req.body.latitude,
     conditions: req.body.conditions,
     date: req.body.date,
   };

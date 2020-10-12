@@ -26,18 +26,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     getFullURL(URL, zipInput, API_KEY)
       .then((convertResponse) => {
+        console.log(convertResponse);
         if (String(convertResponse.cod) === "404") {
           alert("Please enter valid zip code");
         } else {
-          console.log(convertResponse);
+          // console.log(convertResponse);
           const icon = convertResponse.weather[0].icon;
           const date = dateSubmitted;
           const name = convertResponse.name;
+          console.log(name);
           const feelings = feelingsInput;
           const tempMain = Math.floor(convertResponse.main.temp - 273);
           const longitude = convertResponse.coord.lon;
           const latitude = convertResponse.coord.lat;
           console.log("Response json =>", convertResponse);
+
           postData("/sent", {
             icon,
             date,
@@ -93,7 +96,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     console.log("response", res.status); //200 status
     try {
       const retrievedData = await res.json();
-      // console.log("Comes back =>", retrievedData); //temp
+      console.log("Comes back =>", retrievedData);
       dateEntry.innerHTML = retrievedData.date;
       name.innerHTML = retrievedData.name;
       temp.innerHTML = Math.round(retrievedData.temp - 273);
