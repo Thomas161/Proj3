@@ -38,8 +38,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
           const feelings = feelingsInput;
           const tempMain = parseFloat(convertResponse.main.temp);
           console.log("Temp in Celcius", tempMain);
-          const longitude = String(convertResponse.coord.lon);
-          const latitude = String(convertResponse.coord.lat);
+          const longitude = `${convertResponse.coord.lon}`;
+          const latitude = `${convertResponse.coord.lat}`;
           const conditions = convertResponse.weather[0].description;
           console.log("Response json =>", convertResponse);
 

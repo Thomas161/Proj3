@@ -84,11 +84,17 @@ html {
 #entryHolder {
   visibility: hidden;
   display: grid;
-  grid-template-columns: 200px 200px 200px 200px;
+  grid-template-columns: 115px 115px 115px 115px;
   grid-column-gap: 10px;
   background: red;
 
   /* row-gap: 10px; */
+}
+.entry {
+  position: relative;
+  top: 100px;
+  width: 481px;
+  margin: 40px;
 }
 
 .grid-item {
@@ -99,6 +105,15 @@ html {
 
 #entryHolder > div {
   position: relative;
-  font-size: 24px;
+  font-size: 15px;
   color: #fff;
+}
+
+#arrow {
+  border: none;
+  text-decoration: underline;
+  background: cadetblue;
+}
+#arrow:hover {
+  transform: scale(1.09);
 }
