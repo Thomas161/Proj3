@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let lat = document.getElementById("lat");
   let long = document.getElementById("long");
   let icon = document.getElementById("icon");
-  let dateSubmitted = new Date();
+  let dateSubmitted = new Date().toLocaleDateString();
 
   /**Helper functions */
 
@@ -36,9 +36,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
           const name = convertResponse.name;
           console.log(name);
           const feelings = feelingsInput;
-          const tempMain = Math.floor(convertResponse.main.temp - 273);
-          const longitude = convertResponse.coord.lon;
-          const latitude = convertResponse.coord.lat;
+          const tempMain = parseFloat(convertResponse.main.temp);
+          console.log("Temp in Celcius", tempMain);
+          const longitude = String(convertResponse.coord.lon);
+          const latitude = String(convertResponse.coord.lat);
+          const conditions = convertResponse.weather[0].description;
           console.log("Response json =>", convertResponse);
 
           postData("/sent", {
@@ -49,6 +51,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             tempMain,
             longitude,
             latitude,
+            conditions,
           });
         }
       })
