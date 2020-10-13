@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   let dateEntry = document.getElementById("date");
   let temp = document.getElementById("temp");
   let name = document.getElementById("namePlace");
-  let conditions = document.getElementById("conditions");
+  let content = document.getElementById("content");
   let lat = document.getElementById("lat");
   let long = document.getElementById("long");
   let icon = document.getElementById("icon");
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
           console.log("Temp in Celcius", tempMain);
           const longitude = convertResponse.coord.lon;
           const latitude = convertResponse.coord.lat;
-          const conditions = convertResponse.weather[0].description;
+          const content = convertResponse.weather[0].description;
           console.log("Response json =>", convertResponse);
 
           postData("/sent", {
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             tempMain,
             longitude,
             latitude,
-            conditions,
+            content,
           });
         }
       })
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       dateEntry.innerHTML = retrievedData.date;
       name.innerHTML = retrievedData.name;
       temp.innerHTML = Math.round(retrievedData.temp - 273) + "&deg;C";
-      conditions.innerHTML = retrievedData.conditions;
+      content.innerHTML = retrievedData.content;
       lat.innerHTML = "Lat:" + retrievedData.lat;
       long.innerHTML = "Long:" + retrievedData.long;
       let tempIcon = retrievedData.icon;

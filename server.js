@@ -35,7 +35,7 @@ app.post("/sent", (req, res) => {
     feel: req.body.feelings,
     long: req.body.longitude,
     lat: req.body.latitude,
-    conditions: req.body.conditions,
+    content: req.body.content,
     date: req.body.date,
   };
 
