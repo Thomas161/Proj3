@@ -1,8 +1,8 @@
 ## USA Weather APP
 
-Third project built using openweathermap.api
+Javascript project built using openweathermap.api, searches US Zip codes and returns current weather data
 
-###start server
+### start server
 
 ```sh
 npm run start
